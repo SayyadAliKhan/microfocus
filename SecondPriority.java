@@ -81,5 +81,8 @@ public class SecondPriority implements Runnable {
       thread2.setName("Thread 2");
       thread1.start();
       thread2.start();
+        
+      System.out.println("Time Complexity: O(nlogn)")) // where n is the no of records
+      System.out.println("Space Complexity: O(n)"))
     }
 }
