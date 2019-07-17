@@ -6,13 +6,14 @@ public class SortByDate implements Runnable{
 
     private static List<UserInfomation> list;
     private class UserInfomation implements Comparable<UserInfomation> {
+        
         private String userid;
         private int day;
         private int month;
         private int year;
         private Date dateTime;
 
-        public UserInfomation(String userid, String day, String month, String year) {
+        public UserInfomation(String userid, String month, String day, String year) {
             this.userid = userid;
             this.day = Integer.parseInt(day);
             this.month = Integer.parseInt(month);
@@ -37,24 +38,9 @@ public class SortByDate implements Runnable{
     public static void main(String[] args) {
         try {
             Scanner scanner = new Scanner(new File("./input.txt"));
-            SortByDate sortByDate = new SortByDate();
-            list = Collections.synchronizedList(new ArrayList<>());
-            while (scanner.hasNextLine()) {
-                String str = scanner.nextLine().trim().replaceAll("\\s+", " ");
-                String[] line = str.split(" ");
-                if (line.length == 4){
-                    UserInfomation userInfo = sortByDate.new UserInfomation(line[0], line[1], line[2], line[3]);
-                    list.add(userInfo);
-                }
-            }
+            firstPriority(scanner);
             scanner.close();
-            list.sort(Comparator.comparing(o -> o.getDateTime()));
-            Thread thread1 = new Thread(new SortByDate());
-            Thread thread2 = new Thread(new SortByDate());
-            thread1.setName("Thread 1");
-            thread2.setName("Thread 2");
-            thread1.start();
-            thread2.start();
+
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
@@ -71,5 +57,25 @@ public class SortByDate implements Runnable{
             }
         }
 
+    }
+
+    private static void firstPriority(Scanner scanner){
+      SortByDate sortByDate = new SortByDate();
+      list = Collections.synchronizedList(new ArrayList<>());
+      while (scanner.hasNextLine()) {
+          String str = scanner.nextLine().trim().replaceAll("\\s+", " ");
+          String[] line = str.split(" ");
+          if (line.length == 4){
+              UserInfomation userInfo = sortByDate.new UserInfomation(line[0], line[1], line[2], line[3]);
+              list.add(userInfo);
+          }
+      }
+      list.sort(Comparator.comparing(o -> o.getDateTime()));
+      Thread thread1 = new Thread(new SortByDate());
+      Thread thread2 = new Thread(new SortByDate());
+      thread1.setName("Thread 1");
+      thread2.setName("Thread 2");
+      thread1.start();
+      thread2.start();
     }
 }
